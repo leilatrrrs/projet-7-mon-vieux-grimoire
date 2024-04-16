@@ -1,24 +1,28 @@
-const multer = require('multer')
+const multer = require('multer');
 
-// Les différents types MIME pour déterminer les extensions de fichier
 const MIME_TYPES = {
-    'image/jpp': 'jpg',
-    'image/jpeg': 'jpg', 
-    'image/png': 'png',
-    'image/webp': 'webp'
-}
+  'image/jpg': 'jpg',
+  'image/jpeg': 'jpg',
+  'image/png': 'png'
+};
 
-// Config de multer pour enregistrer les fichiers dans 'images'
+const fileFilter = (req, file, callback) => {
+  if (MIME_TYPES[file.mimetype]) {
+    callback(null, true);
+  } else {
+    callback(new Error('Invalid file type.'));
+  }
+};
+
 const storage = multer.diskStorage({
-    destination: (req, file, callback) => {
-        callback(null, 'images') // Dossier de destination
-    },
-    // Génère nom de fichier unique avec extension de fichier appropriée
-    filename: (req, file, callback) =>{
-        const name = file.originalname.split(' ').join('_'); // remplace espace par _
-        const extension = MIME_TYPES[file.mimetype]; // Détermine l'extension du fichier à partir de son type MIME
-        callback(null, name + Date.now() + '.' + extension) // Génère nom du fichier
-    }
-})
+  destination: (req, file, callback) => {
+    callback(null, 'images');
+  },
+  filename: (req, file, callback) => {
+    const extension = MIME_TYPES[file.mimetype];
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    callback(null, uniqueSuffix + '.' + extension);
+  }
+});
 
-module.exports = multer({storage: storage}).single('image')
+module.exports = multer({ storage: storage, fileFilter: fileFilter }).single('image');

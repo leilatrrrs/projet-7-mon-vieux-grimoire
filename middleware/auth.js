@@ -1,17 +1,18 @@
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
+
+require('dotenv').config()
+const jwt_secret_token = process.env.JWT_SECRET_TOKEN
 
 module.exports = (req, res, next) => {
-    try {
-        //Vérifie si la demande HTTP conteint l'en-tête d'autorisation
-        const token = req.headers.authorization.split(' ')[1]; // si oui divise en tableau + recup le 2nd élément du tableau 
-            const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET'); // Verif Token
-            const userId = decodedToken.userId; // Extraction de l'Id utilisateur du token
-            req.auth = { // ajoute l'Id utilisateur à l'objet de requête
-                userId: userId
-            };
-        
-        next(); // Passe au middleware suivant
-    } catch(error) {
-        res.status(401).json({ error });
-    }
-};
+   try {
+       const token = req.headers.authorization.split(' ')[1]
+       const decodedToken = jwt.verify(token, `${jwt_secret_token}`)
+       const userId = decodedToken.userId;
+       req.auth = {
+           userId: userId
+       }
+	next()
+   } catch(error) {
+       res.status(401).json({ error })
+   }
+}

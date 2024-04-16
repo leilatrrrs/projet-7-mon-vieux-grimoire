@@ -22,14 +22,14 @@ exports.signup = (req, res, next) => {
 
 exports.login = (req, res, next) => {
     User.findOne({email:req.body.email})
-    .then(user => { // Vérification des infos
+    .then((user) => { // Vérification des infos
         if (!user) {
-            return res.status(401).json({message: "L'identifiant ou le mot de passe est incorrecte"})
+            return res.status(401).json({error: "L'identifiant ou le mot de passe est incorrecte"})
         }  
             bcrypt.compare(req.body.password, user.password)
-            .then (valid => {
+            .then ((valid) => {
                 if (!valid){
-                    return res.status(401).json({message:"L'identifiant ou le mot de passe est incorrecte" })
+                    return res.status(401).json({error:"L'identifiant ou le mot de passe est incorrecte" })
                 } 
                     res.status(200).json({ // Génération d'un token JWT
                         userId: user._id,
