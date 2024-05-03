@@ -1,9 +1,9 @@
-const express = require('express');
-const mongoose = require('mongoose')
-const bookRoutes = require('./routes/book')
+const express = require('express');// créer Application Express
+const mongoose = require('mongoose') // intérargir avec mongoDB
+const bookRoutes = require('./routes/book') 
 const userRoutes = require('./routes/user')
-const path = require('path')
-const cors = require('cors')
+const path = require('path') // manipuler les chemins de fichiers + répertoires
+const cors = require('cors') // gérer les requêtes cross-origin
 
 const app = express()
 
@@ -21,7 +21,7 @@ app.use((req, res, next) => {
     credentials: true,
 }));
 
-const helmet = require('helmet')
+const helmet = require('helmet') // améliore la sécurité
 
 app.use(helmet({crossOriginResourcePolicy: false,}))
 

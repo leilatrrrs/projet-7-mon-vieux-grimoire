@@ -5,6 +5,11 @@ const User = require('../models/User')
 //création de nouveaux users
 
 exports.signup = (req, res, next) => {
+    const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+    if (!emailRegex.test(req.body.email) || !passwordRegex.test(req.body.password)) {
+        return res.status(400).json({ error: 'Adresse e-mail ou mot de passe invalide.' });
+    }
 /* fonction pour hacher un mdp */
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
@@ -21,6 +26,11 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
+    const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+    if (!emailRegex.test(req.body.email) || !passwordRegex.test(req.body.password)) {
+        return res.status(400).json({ error: 'Adresse e-mail ou mot de passe invalide.' });
+    }
     User.findOne({email:req.body.email})
     .then((user) => { // Vérification des infos
         if (!user) {
